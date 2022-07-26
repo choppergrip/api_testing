@@ -9,8 +9,10 @@ TEST_USER = UserModel(login='6wl',
                       followers=16,
                       following=29)
 
-SERVER_NAME = 'GitHub.com'
-JSON_CONTENT_TYPE = 'application/json; charset=utf-8'
+EXPECTED_HEADERS = {
+    'Server': 'GitHub.com',
+    'Content-Type': 'application/json; charset=utf-8'
+}
 
 
 class TestGithubUsersAPI:
@@ -24,10 +26,10 @@ class TestGithubUsersAPI:
         response = app.user.get_user_info(user_name=TEST_USER.login)
 
         assert response.status_code == 200, 'Status code is not correct'
-        assert response.headers.get('Content-Type') == JSON_CONTENT_TYPE, 'Content-Type is not correct'
-        assert response.headers.get('server') == SERVER_NAME, 'Server name is not correct'
-
         assert response.data == TEST_USER, 'User info is not correct'
+
+        for key, value in EXPECTED_HEADERS.items():
+            assert response.headers.get(key) == value, f'{key} header is not correct'
 
 
 
