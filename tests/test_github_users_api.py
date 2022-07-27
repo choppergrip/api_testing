@@ -1,13 +1,4 @@
-from fixtures.user.model import UserModel
-
-TEST_USER = UserModel(login='6wl',
-                      name='Gregory Loscombe',
-                      id=15330,
-                      location='Manchester',
-                      public_repos=6,
-                      public_gists=11,
-                      followers=16,
-                      following=29)
+from constants.test_users import TEST_USER
 
 EXPECTED_HEADERS = {
     'Server': 'GitHub.com',
@@ -20,18 +11,13 @@ class TestGithubUsersAPI:
         """
         1. Try to get user info
         2. Check that status code is 200
-        3. Check response headers
-        4. Check response body
+        3. Check response body
+        4. Check response headers
         """
-        response = app.user.get_user_info(user_name=TEST_USER.login)
+        response = app.api.user.get_user_info(user_name=TEST_USER.login)
 
         assert response.status_code == 200, 'Status code is not correct'
         assert response.data == TEST_USER, 'User info is not correct'
 
         for key, value in EXPECTED_HEADERS.items():
             assert response.headers.get(key) == value, f'{key} header is not correct'
-
-
-
-# class TestGithubUsersUI:
-#     pass
